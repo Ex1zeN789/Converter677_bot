@@ -15,14 +15,22 @@ router = Router()
 os.makedirs("temp", exist_ok=True)
 
 
-@router.message(F.text == "🎵 Конвертировать аудио")
+@router.message(F.text == "🎵 Аудио")
 async def audio_menu(message: Message, state: FSMContext):
 
     await state.set_state(AudioConverter.waiting_format)
 
     await message.answer(
-        "🎵 Выберите формат:",
-        reply_markup=audio_keyboard
+        "🎵 <b>Конвертация аудио</b>\n\n"
+        "Поддерживаемые форматы:\n\n"
+        "🟢 MP3\n"
+        "🔵 WAV\n"
+        "🟣 FLAC\n"
+        "🟠 OGG\n"
+        "🟡 M4A\n\n"
+        "👇 <b>Выберите формат:</b>",
+        reply_markup=audio_keyboard,
+        parse_mode="HTML"
     )
 
 
@@ -52,7 +60,8 @@ async def choose_format(message: Message, state: FSMContext):
     )
 
     await message.answer(
-        "🎧 Теперь отправьте аудиофайл."
+        "🎧 <b>Теперь отправьте аудиофайл.</b>",
+        parse_mode="HTML"
     )
 
 
@@ -107,7 +116,10 @@ async def process_audio(
     output_ext = data["format"]
 
     progress = await message.answer(
-        "⏳ Конвертирую..."
+        "🎵 <b>Файл получен!</b>\n\n"
+        "████░░░░░░ 40%\n\n"
+        "⚙️ Конвертирую аудио...",
+        parse_mode="HTML"
     )
 
     uid = str(uuid.uuid4())
@@ -129,12 +141,19 @@ async def process_audio(
     )
 
     await progress.edit_text(
-        "📤 Отправляю..."
+        "██████████ 100%\n\n"
+        "📤 Загружаю результат...",
+        parse_mode="HTML"
     )
 
     await message.answer_document(
         FSInputFile(output_path),
-        caption=f"✅ Готово!\n\nФормат: {output_ext.upper()}",
+        caption=(
+            "🎉 <b>Готово!</b>\n\n"
+            f"🎵 <b>Формат:</b> {output_ext.upper()}\n\n"
+            "❤️ Спасибо за использование <b>Converter677 Bot</b>!"
+        ),
+        parse_mode="HTML",
         reply_markup=main_keyboard
     )
 
@@ -144,5 +163,6 @@ async def process_audio(
     await state.clear()
 
     await progress.edit_text(
-        "✅ Конвертация завершена!"
+        "✅ <b>Конвертация завершена!</b>",
+        parse_mode="HTML"
     )

@@ -38,8 +38,10 @@ async def receive_photo(message: Message, state: FSMContext):
     await state.set_state(ImageConverter.waiting_action)
 
     await message.answer(
-        "✅ Фото получено!\n\nВыберите формат:",
-        reply_markup=get_formats_keyboard()
+    "🖼️ <b>Изображение успешно загружено!</b>\n\n"
+    "👇 <b>Выберите формат, в который хотите конвертировать:</b>",
+    reply_markup=get_formats_keyboard(),
+    parse_mode="HTML"
     )
 
 
@@ -67,9 +69,11 @@ async def receive_document(message: Message, state: FSMContext):
     await state.set_state(ImageConverter.waiting_action)
 
     await message.answer(
-        "✅ Изображение получено!\n\nВыберите формат:",
-        reply_markup=get_formats_keyboard()
-    )
+    "🖼️ <b>Файл успешно загружен!</b>\n\n"
+    "👇 <b>Выберите формат, в который хотите конвертировать:</b>",
+    reply_markup=get_formats_keyboard(),
+    parse_mode="HTML"
+)
 
 
 # ==========================
@@ -99,7 +103,12 @@ async def convert(callback: CallbackQuery, state: FSMContext):
 
     output_path = f"temp/{uid}.{ext}"
 
-    await callback.message.edit_text("⏳ Конвертирую...")
+    await callback.message.edit_text(
+    "📥 <b>Файл получен!</b>\n\n"
+    "████░░░░░░ 40%\n\n"
+    "⚙️ Конвертирую изображение...",
+    parse_mode="HTML"
+)
 
     if output_format == "PDF":
         image = Image.open(input_path)
@@ -112,17 +121,28 @@ async def convert(callback: CallbackQuery, state: FSMContext):
             output_format
         )
 
-    await callback.message.edit_text("📤 Отправляю файл...")
-
+    await callback.message.edit_text(
+    "🎉 <b>Конвертация успешно завершена!</b>",
+    parse_mode="HTML"
+)
+    
+    await callback.message.edit_text(
+    "██████████ 100%\n\n"
+    "📤 Загружаю результат...",
+    parse_mode="HTML"
+)
+    
     await callback.message.answer_document(
-        document=FSInputFile(output_path),
-        caption=(
-            f"✅ Конвертация завершена!\n\n"
-            f"📁 Формат: {output_format}\n\n"
-            "Выберите следующее действие 👇"
-        ),
-        reply_markup=main_keyboard
-    )
+    document=FSInputFile(output_path),
+    caption=(
+        "🎉 <b>Готово!</b>\n\n"
+        f"📁 <b>Формат:</b> {output_format}\n\n"
+        "Спасибо, что используете <b>Converter677 Bot</b> ❤️\n\n"
+        "👇 Выберите следующую функцию."
+    ),
+    parse_mode="HTML",
+    reply_markup=main_keyboard
+)
 
     os.remove(input_path)
     os.remove(output_path)

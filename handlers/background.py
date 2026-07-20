@@ -20,14 +20,23 @@ async def background_menu(message: Message, state: FSMContext):
     await state.set_state(BackgroundRemover.waiting_image)
 
     await message.answer(
-        "🖼️ Отправьте изображение, у которого нужно удалить фон."
+        "🪄 <b>Удаление фона</b>\n\n"
+        "📤 Отправьте фотографию.\n\n"
+        "Через несколько секунд вы получите изображение "
+        "с прозрачным фоном.",
+        parse_mode="HTML"
     )
 
 
 @router.message(BackgroundRemover.waiting_image, F.photo)
 async def remove_bg_photo(message: Message, state: FSMContext):
 
-    progress = await message.answer("⏳ Удаляю фон...")
+    progress = await message.answer(
+        "🖼 <b>Изображение получено!</b>\n\n"
+        "████░░░░░░ 40%\n\n"
+        "⚙️ Удаляю фон...",
+        parse_mode="HTML"
+    )
 
     photo = message.photo[-1]
 
@@ -48,11 +57,20 @@ async def remove_bg_photo(message: Message, state: FSMContext):
         output_path
     )
 
-    await progress.edit_text("📤 Отправляю изображение...")
+    await progress.edit_text(
+        "██████████ 100%\n\n"
+        "📤 Загружаю результат...",
+        parse_mode="HTML"
+    )
 
     await message.answer_document(
-        FSInputFile(output_path),
-        caption="✅ Фон успешно удален!",
+        document=FSInputFile(output_path),
+        caption=(
+            "🎉 <b>Готово!</b>\n\n"
+            "🪄 <b>Фон успешно удалён.</b>\n\n"
+            "❤️ Спасибо за использование <b>Converter677 Bot</b>!"
+        ),
+        parse_mode="HTML",
         reply_markup=main_keyboard
     )
 
@@ -61,4 +79,7 @@ async def remove_bg_photo(message: Message, state: FSMContext):
 
     await state.clear()
 
-    await progress.edit_text("✅ Готово!")
+    await progress.edit_text(
+        "✅ <b>Удаление фона завершено!</b>",
+        parse_mode="HTML"
+    )

@@ -1,5 +1,22 @@
-venv/
+# Python
 __pycache__/
-*.pyc
-temp/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+venv/
 .env
+
+# VS Code
+.vscode/
+
+# Temporary files
+temp/
+*.log
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Python cache
+.pytest_cache/
