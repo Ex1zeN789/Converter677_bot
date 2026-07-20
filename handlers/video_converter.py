@@ -15,7 +15,7 @@ router = Router()
 os.makedirs("temp", exist_ok=True)
 
 
-@router.message(F.text == "🎥 Видео")
+@router.message(F.text == "🎥 Конвертировать видео")
 async def video_menu(message: Message, state: FSMContext):
 
     await state.set_state(VideoConverter.waiting_video)
@@ -80,6 +80,9 @@ async def convert_mp3(callback: CallbackQuery, state: FSMContext):
 
     video_to_mp3(input_path, output_path)
 
+    print("MP3 создан:", os.path.exists(output_path))
+    print(output_path)
+
     await callback.message.edit_text(
         "██████████ 100%\n\n"
         "📤 Загружаю результат...",
@@ -129,6 +132,9 @@ async def convert_gif(callback: CallbackQuery, state: FSMContext):
     )
 
     video_to_gif(input_path, output_path)
+
+    print("GIF создан:", os.path.exists(output_path))
+    print(output_path)
 
     await callback.message.edit_text(
         "██████████ 100%\n\n"

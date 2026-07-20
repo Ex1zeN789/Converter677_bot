@@ -15,7 +15,7 @@ router = Router()
 os.makedirs("temp", exist_ok=True)
 
 
-@router.message(F.text == "🎵 Аудио")
+@router.message(F.text == "🎵 Конвертировать аудио")
 async def audio_menu(message: Message, state: FSMContext):
 
     await state.set_state(AudioConverter.waiting_format)
@@ -139,6 +139,9 @@ async def process_audio(
         input_path,
         output_path
     )
+
+    print("Файл создан:", os.path.exists(output_path))
+    print("Путь:", output_path)
 
     await progress.edit_text(
         "██████████ 100%\n\n"
