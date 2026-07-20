@@ -17,9 +17,6 @@ main_keyboard = ReplyKeyboardMarkup(
         [
             KeyboardButton(text="📄 Конвертировать в PDF")
         ],
-        [
-            KeyboardButton(text="📝 Распознать текст"),
-        ],
     ],
     resize_keyboard=True
 )
