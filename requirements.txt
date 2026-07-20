@@ -5,4 +5,3 @@ Pillow==11.3.0
 ffmpeg-python
 rembg
 onnxruntime
-python-docx

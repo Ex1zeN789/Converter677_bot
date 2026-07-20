@@ -14,9 +14,6 @@ main_keyboard = ReplyKeyboardMarkup(
         [
             KeyboardButton(text="🪄 Удалить фон")
         ],
-        [
-            KeyboardButton(text="📄 Конвертировать в PDF")
-        ],
     ],
     resize_keyboard=True
 )
